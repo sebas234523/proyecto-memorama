@@ -1,0 +1,51 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>🐱 Memorama de Mascotas 🐶</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  
+  <!-- ESTADÍSTICAS -->
+  <div class="stats">
+    <span>🎯 Intentos: <strong>{{ attempts }}</strong></span>
+    <span>🏆 Pares: <strong>{{ matches }}</strong> / <strong>{{ pairs }}</strong></span>
+    <ion-button (click)="newGame()" size="small">
+      🔄 Reiniciar
+    </ion-button>
+  </div>
+
+  <!-- MENSAJE DE VICTORIA -->
+  <div *ngIf="finished" class="victory">
+    <h2>🎉 ¡Ganaste! 🎉</h2>
+    <p>✨ Lo lograste en <strong>{{ attempts }}</strong> intentos ✨</p>
+  </div>
+
+  <!-- DEBUG: Mostrar número de cartas -->
+  <div style="color: white; text-align: center; margin: 10px 0; background: rgba(255,255,255,0.1); padding: 5px; border-radius: 8px;">
+    Total de cartas: {{ cards.length }}
+  </div>
+
+  <!-- TABLERO -->
+  <div class="board">
+    <!-- Si no hay cartas, mostrar mensaje -->
+    <div *ngIf="cards.length === 0" style="color: white; text-align: center; grid-column: 1 / -1; padding: 40px; background: rgba(255,255,255,0.05); border-radius: 16px;">
+      ⏳ Cargando cartas...
+    </div>
+    
+    <!-- Recorrer todas las cartas -->
+    <div *ngFor="let card of cards" 
+         class="card" 
+         [class.revealed]="card.revealed || card.matched"
+         [class.matched]="card.matched"
+         (click)="onCardClick(card)">
+      
+      <!-- Mostrar el emoji o ❓ -->
+      <span class="emoji">
+        {{ card.revealed || card.matched ? card.emoji : '❓' }}
+      </span>
+      
+    </div>
+  </div>
+
+</ion-content>

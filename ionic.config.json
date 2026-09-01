@@ -1,0 +1,7 @@
+{
+  "name": "memorama",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

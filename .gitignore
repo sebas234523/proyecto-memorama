@@ -1,0 +1,7 @@
+﻿node_modules/
+www/
+dist/
+.env
+android/
+ios/
+.angular/
