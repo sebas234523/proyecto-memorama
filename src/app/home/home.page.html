@@ -1,12 +1,48 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>🐱 Memorama de Mascotas 🐶</ion-title>
+    <ion-title>
+      🐱 Memorama de Mascotas 🐶
+      <span *ngIf="nombreUsuario" style="font-size: 0.6em; opacity: 0.7; margin-left: 8px; display: inline-block;">
+        ({{ nombreUsuario }})
+      </span>
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
-  
-  <!-- ESTADÍSTICAS -->
+
+  <ion-button id="present-alert">Partida nueva</ion-button>
+  <ion-alert
+  trigger="present-alert"
+  header="Ingrese su nombre"
+  [buttons]="alertButtons"
+  [inputs]="alertInputs"
+  ></ion-alert>
+
+  <ion-button (click)="openHistory()" expand="block">Abrir</ion-button>
+
+  <ion-modal initial-breakpoint="0.5" [isOpen]="isHistoryOpen" (didDismiss)="closeHistory()">
+    <ng-template>
+      <ion-header translucent="true">
+        <ion-toolbar>
+          <ion-title>Historial</ion-title>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content>
+        <ion-list>
+          <ion-item *ngFor="let h of history">
+            <ion-label>
+              <strong>{{ h.nombre || 'Anónimo' }}</strong> - 
+              {{ h.attempts }} intentos - 
+              {{ h.fecha | date:'short' }}
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
   <div class="stats">
     <span>🎯 Intentos: <strong>{{ attempts }}</strong></span>
     <span>🏆 Pares: <strong>{{ matches }}</strong> / <strong>{{ pairs }}</strong></span>
@@ -15,15 +51,17 @@
     </ion-button>
   </div>
 
-  <!-- MENSAJE DE VICTORIA -->
   <div *ngIf="finished" class="victory">
     <h2>🎉 ¡Ganaste! 🎉</h2>
     <p>✨ Lo lograste en <strong>{{ attempts }}</strong> intentos ✨</p>
   </div>
 
-  <!-- DEBUG: Mostrar número de cartas -->
+  <!-- ✅ DEBUG: Mostrar información de las cartas -->
   <div style="color: white; text-align: center; margin: 10px 0; background: rgba(255,255,255,0.1); padding: 5px; border-radius: 8px;">
     Total de cartas: {{ cards.length }}
+    <span *ngIf="cards.length > 0" style="margin-left: 10px; font-size: 0.8em;">
+      Ejemplo: {{ cards[0]?.emoji || 'N/A' }}
+    </span>
   </div>
 
   <!-- TABLERO -->
@@ -33,15 +71,15 @@
       ⏳ Cargando cartas...
     </div>
     
-    <!-- Recorrer todas las cartas -->
+    <!-- ✅ Recorrer todas las cartas -->
     <div *ngFor="let card of cards" 
          class="card" 
          [class.revealed]="card.revealed || card.matched"
          [class.matched]="card.matched"
          (click)="onCardClick(card)">
       
-      <!-- Mostrar el emoji o ❓ -->
-      <span class="emoji">
+      <!-- ✅ Mostrar el emoji o signo de interrogación -->
+      <span class="emoji" style="font-size: 2.8rem;">
         {{ card.revealed || card.matched ? card.emoji : '❓' }}
       </span>
       
